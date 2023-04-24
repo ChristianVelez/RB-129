@@ -1,0 +1,9 @@
+enter_name: 'please enter your name ...'
+flip_cards: 'now everyone will turn their cards over ...'
+tie: "it's a push"
+cards_dealt: 'cards will now be dealt ...'
+play_again: 'would you like play again? (y)es or (n)o'
+invalid_play_again: 'sorry ... must enter (y)es or (n)o'
+hit_or_stay: 'would you like to (h)it or (s)tay?'
+invalid_hit_or_stay: 'sorry ... must enter (h) or (s)'
+goodbye: 'thanks for joining our table, goodbye!'
