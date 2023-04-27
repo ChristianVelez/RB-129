@@ -18,11 +18,15 @@ module Promptable
   end
 
   def pause
-    sleep 1
+    sleep 2
   end
 
   def long_pause
-    sleep 3
+    sleep 3.75
+  end
+
+  def longest_pause
+    sleep 8.5
   end
 
   def clear_screen
@@ -265,6 +269,10 @@ class Player
     prompt("#{name} wins!")
   end
 
+  def reset
+    set_up_score
+  end
+
   private
 
   attr_writer :name, :marker, :score
@@ -288,11 +296,8 @@ class Human < Player
   private
 
   def set_up_name
-    loop do
-      prompt(MESSAGES['name'])
-      self.name = gets.chomp.downcase
-      break unless name.empty?
-    end
+    prompt(MESSAGES['name'])
+    self.name = gets.chomp.downcase
   end
 
   def standard_marker
@@ -350,7 +355,7 @@ module Displayable
     clear_screen
     prompt(MESSAGES['welcome'] + ", #{human.name}")
     new_line
-    pause
+    long_pause
     clear_screen
   end
 
@@ -359,14 +364,14 @@ module Displayable
             the rules of the game are simple:
 
             - one point per win
-            - first player to 5 points wins the game
+            - first player to 3 points wins the game
 
             ready?
 
             ok...let's play
 
               RULES
-    long_pause
+    longest_pause
     clear_screen
   end
 
@@ -405,7 +410,7 @@ module Displayable
   end
 
   def display_open_square_choice
-    prompt(MESSAGES['choose_square'] + "#{joinor(board.open_squares)}")
+    prompt(MESSAGES['choose_square'] + joinor(board.open_squares).to_s)
   end
 
   def joinor(options, separator = ', ', joiner = 'or')
@@ -471,6 +476,7 @@ class TicTacToe
     loop do
       main_game
       break unless play_again?
+      reset_scores
     end
 
     display_goodbye_message
@@ -481,12 +487,10 @@ class TicTacToe
   attr_writer :gameplay, :first_player, :current_player
 
   def main_game
-
     loop do
       player_move
       display_result
       break if game_won?
-      clear_board
     end
   end
 
@@ -504,14 +508,14 @@ class TicTacToe
   def display_result
     display_board_and_score
     determine_winner
-    pause
+    long_pause
   end
 
   # Winning logic
 
   def game_won?
-    human.score == 5 ||
-      computer.score == 5
+    human.score == 3 ||
+      computer.score == 3
   end
 
   def determine_winner
@@ -523,6 +527,7 @@ class TicTacToe
     else
       prompt("it's a tie")
     end
+    clear_board
   end
 
   # Gameplay logic
@@ -706,6 +711,11 @@ class TicTacToe
   def clear_board
     board.reset
     self.current_player = first_player
+  end
+
+  def reset_scores
+    human.reset
+    computer.reset
   end
 end
 
